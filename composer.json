@@ -1,0 +1,12 @@
+{
+    "name": "affinity4/file",
+    "description": "Recursively search parent directories of a given directory for files with regex pattern or filename",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Luke Watts",
+            "email": "luke@affinity4.ie"
+        }
+    ],
+    "require": {}
+}
