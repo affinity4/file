@@ -2,11 +2,20 @@
     "name": "affinity4/file",
     "description": "Recursively search parent directories of a given directory for files with regex pattern or filename",
     "license": "MIT",
+    "keywords": ["file", "affinity4"],
     "authors": [
         {
             "name": "Luke Watts",
             "email": "luke@affinity4.ie"
         }
     ],
-    "require": {}
+    "autoload": {
+        "psr-4": {
+            "Affinity4\\File\\": "src/"
+        }
+    },
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "^5.7"
+    }
 }
