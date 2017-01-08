@@ -2,7 +2,7 @@
 /**
  * This file is part of Affinity4\File.
  *
- * (c) 2016 Luke Watts <luke@affinity4.ie>
+ * (c) 2017 Luke Watts <luke@affinity4.ie>
  *
  * This software is licensed under the MIT license. For the
  * full copyright and license information, please view the
@@ -13,31 +13,49 @@ namespace Affinity4\File;
 /**
  * File Class
  *
+ * @author Luke Watts <luke@affinity4.ie>
+ * @since  1.0.0
+ *
  * @package Affinity4\File
  */
 class File
 {
     /**
+     * @author Luke Watts <luke@affinity4.ie>
+     * @since  1.0.0
+     *
      * @var \DirectoryIterator
      */
     private $iterator;
     
     /**
+     * @author Luke Watts <luke@affinity4.ie>
+     * @since  1.0.0
+     *
      * @var
      */
     private $pattern;
     
     /**
+     * @author Luke Watts <luke@affinity4.ie>
+     * @since  1.0.0
+     *
      * @var
      */
     private $limit = -1;
     
     /**
+     * @author Luke Watts <luke@affinity4.ie>
+     * @since  1.0.0
+     *
      * @var array
      */
     private $regex_delimiters = ['/', '#', '@', '~'];
     
     /**
+     * @author Luke Watts <luke@affinity4.ie>
+     * @since  1.0.0
+     *
      * @var array
      */
     private $file_list = [];
@@ -48,6 +66,9 @@ class File
      * Can be a regex pattern with the delimiters /, #, @ or ~
      *
      * Can also be a plain file name to search for only that file
+     *
+     * @author Luke Watts <luke@affinity4.ie>
+     * @since  1.0.0
      *
      * @param $pattern
      *
@@ -64,6 +85,9 @@ class File
      * Sets the limit to -1 so searches will return
      * a complete array of all results
      *
+     * @author Luke Watts <luke@affinity4.ie>
+     * @since  1.0.0
+     *
      * @return $this
      */
     public function all()
@@ -75,6 +99,9 @@ class File
     
     /**
      * Return the first item as a single SplFileInfo object.
+     *
+     * @author Luke Watts <luke@affinity4.ie>
+     * @since  1.0.0
      *
      * @return $this
      */
@@ -92,6 +119,9 @@ class File
      * of an array of objects.
      *
      * Setting to -1 returns an array of all results
+     *
+     * @author Luke Watts <luke@affinity4.ie>
+     * @since  1.0.0
      *
      * @param $num
      *
