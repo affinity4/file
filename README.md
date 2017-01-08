@@ -1,4 +1,7 @@
 # File
+
+[![Build Status](https://travis-ci.org/affinity4/File.svg?branch=master)](https://travis-ci.org/affinity4/File)
+
 The File class recursively searches parent directories from a specified directory for files using a regex pattern or plain filename.
 
 ## Installation
