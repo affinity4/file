@@ -90,6 +90,49 @@ class File
     }
     
     /**
+     * Alias of the upOne() method
+     *
+     * @author Luke Watts <luke@affinity4.ie>
+     * @since  2.0.0
+     */
+    public function parent()
+    {
+        $pattern = $this->getPattern();
+        $dir     = $this->getDir();
+    
+        if ($this->find($pattern)->in($dir)->has() === false) {
+            $dir             = dirname($dir);
+            $this->file_list = $this->find($pattern)->in($dir)->get();
+        } else {
+            $this->file_list = $this->find($pattern)->in($dir)->get();
+        }
+    
+        return $this;
+    }
+    
+    /**
+     * Alias of the up() method
+     *
+     * @author Luke Watts <luke@affinity4.ie>
+     * @since  2.0.0
+     */
+    public function parents()
+    {
+        $dir     = $this->getDir();
+        $pattern = $this->getPattern();
+    
+        if ($this->find($pattern)->in($dir)->has() === false) {
+            $dir = dirname($dir);
+        
+            $this->file_list = $this->find($pattern)->in($dir)->up()->get();
+        } else {
+            $this->file_list = $this->find($pattern)->in($dir)->get();
+        }
+    
+        return $this;
+    }
+    
+    /**
      * Sets the directory to start search in.
      *
      * @author Luke Watts <luke@affinity4.ie>
@@ -117,33 +160,33 @@ class File
     {
         $dir     = $this->getDir();
         $pattern = $this->getPattern();
-        $limit   = $this->getLimit();
     
         if ($this->find($pattern)->in($dir)->has() === false) {
             $dir = dirname($dir);
-            $this->file_list = $this->find($pattern)->in($dir)->get($limit);
+            $this->file_list = $this->find($pattern)->in($dir)->get();
         } else {
-            $this->file_list = $this->find($pattern)->in($dir)->get($limit);
+            $this->file_list = $this->find($pattern)->in($dir)->get();
         }
         
         return $this;
     }
     
     /**
+     * Recursively searches parent directories.
+     *
      * @return File
      */
     public function up()
     {
         $dir = $this->getDir();
         $pattern = $this->getPattern();
-        $limit   = $this->getLimit();
     
         if ($this->find($pattern)->in($dir)->has() === false) {
             $dir = dirname($dir);
             
-            $this->file_list = $this->find($pattern)->in($dir)->up()->get($limit);
+            $this->file_list = $this->find($pattern)->in($dir)->up()->get();
         } else {
-            $this->file_list = $this->find($pattern)->in($dir)->get($limit);
+            $this->file_list = $this->find($pattern)->in($dir)->get();
         }
         
         return $this;

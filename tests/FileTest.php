@@ -160,6 +160,7 @@ class FileTest extends TestCase
         $dir     = 'tests/files/01/02';
         
         $this->assertContainsOnlyInstancesOf('SplFileInfo', $this->file->find($pattern)->in($dir)->upOne()->get());
+        $this->assertCount(3, $this->file->find($pattern)->in($dir)->upOne()->get());
     }
     
     /**
@@ -177,5 +178,28 @@ class FileTest extends TestCase
         $this->assertInternalType('array', $this->file->find($pattern)->in($dir)->up()->get());
         $this->assertInstanceOf('Affinity4\File\File', $this->file->find($pattern)->in($dir)->up());
         $this->assertContainsOnlyInstancesOf('SplFileInfo', $this->file->find($pattern)->in($dir)->up()->get());
+        $this->assertCount(3, $this->file->find($pattern)->in($dir)->up()->get());
+    }
+    
+    public function testParent()
+    {
+        $pattern = '/^test[\w\d-]*.txt$/';
+        $dir     = 'tests/files/01/02';
+    
+        $this->assertInternalType('array', $this->file->find($pattern)->in($dir)->parent()->get());
+        $this->assertInstanceOf('Affinity4\File\File', $this->file->find($pattern)->in($dir)->parent());
+        $this->assertContainsOnlyInstancesOf('SplFileInfo', $this->file->find($pattern)->in($dir)->parent()->get());
+        $this->assertCount(3, $this->file->find($pattern)->in($dir)->parent()->get());
+    }
+    
+    public function testParents()
+    {
+        $pattern = '/^test01-[\w\d]{2}.txt$/';
+        $dir     = 'tests/files/01/02';
+        
+        $this->assertInternalType('array', $this->file->find($pattern)->in($dir)->parents()->get());
+        $this->assertInstanceOf('Affinity4\File\File', $this->file->find($pattern)->in($dir)->parents());
+        $this->assertContainsOnlyInstancesOf('SplFileInfo', $this->file->find($pattern)->in($dir)->parents()->get());
+        $this->assertCount(3, $this->file->find($pattern)->in($dir)->parents()->get());
     }
 }
