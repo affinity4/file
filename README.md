@@ -14,7 +14,7 @@ or
 ```
 {
     "require": {
-        "affinity4/file": "^1.0"
+        "affinity4/file": "^2.0"
     }
 }
 ```
@@ -29,78 +29,47 @@ root
   |    |-- 01
   |    |    |-- test01-01.php
   |    |    |-- test01-02.php
+  |    |    |-- test01-03.php
   |    |    |-- 02
-  |    |    |    |-- test02-01.php
   |    |    |    |-- YOU-ARE-HERE
 ```
 
 ``` 
 $file = new Affinity4\File\File;
-$result = $file->find('test.php')->one()->inParentsOf(__DIR__);
+$results = $file->find('/^test[\d]{2}-[\d]{2}.php$/')->in(__DIR__)->upOne()->get();
 
-return $result->getPathname(); // root/files/test.php
+$results[0]->getPathname(); // root/files/01/test01-01.php
+$results[1]->getPathname(); // root/files/01/test01-02.php
+$results[2]->getPathname(); // root/files/01/test01-03.php
 ``` 
 
 To find numerous files you can use a regex pattern with the following delimiters /, @, #, ~ in the `find()` method:
 
 ```
 $file = new Affinity4\File\File;
-$results = $file->find('/^test[\d]{2}-[\d]{2}.php$/')->inParentsOf(__DIR__);
+$result = $file->find('test.php')->in(__DIR__)->up()->get();
 
-var_dump($results); 
+$result->getPathname(); // root/files/test.php
 ```
 
-Would Return:
-
-```
-[
-  0 => object(SplFileInfo)#5 (2) {
-    ["pathName":"SplFileInfo":private] => string(28) "root/files/01/test01-01.php",
-    ["fileName":"SplFileInfo":private] => string(13) "test01-01.php"
-  ],
-  1 => object(SplFileInfo)#6 (2) [
-    ["pathName":"SplFileInfo":private] => string(28) "root/files/01/test01-02.php",
-    ["fileName":"SplFileInfo":private] => string(13) "test01-02.php"
-  ],
-  2 => object(SplFileInfo)#7 (2) [
-    ["pathName":"SplFileInfo":private] => string(28) "root/files/01/test01-03.php",
-    ["fileName":"SplFileInfo":private] => string(13) "test01-03.php"
-  ]
-]
-```
-
-You can also specify the if you only want the one item returned using the `one()` method. This will return the first SplFileInfo object in the array, and not an array with one SplFileInfo object.
+You can also specify if you only want the one item returned using the `get()` method. This will return the first SplFileInfo object in the array, and not an array with one SplFileInfo object.
  
 ```
 $file = new Affinity4\File\File;
 
-$result = $file->find('/^test[\d]{2}-[\d]{2}.php$/')->one()->inParentsOf(__DIR__);
+$result = $file->find('/^test[\d]{2}-[\d]{2}.php$/')->in(__DIR__)->up()->get(1);
 
 return $result->getPathname() // root/files/01/test01-01.php;
 ```
 
-You can also specify exactly how many items you want returned in an array using the `amount()` method.
+You can also specify exactly how many items you want returned in an array using the `get()` method.
 
 ```
 $file = new Affinity4\File\File;
-$results = $file->find('/^test[\d]{2}-[\d]{2}.php$/')->amount(2)->inParentsOf(__DIR__);
+$results = $file->find('/^test[\d]{2}-[\d]{2}.php$/')->in(__DIR__)->up()->get(2);
 
-var_dump($results); 
-```
-
-Would Return:
-
-```
-[
-  0 => object(SplFileInfo)#5 (2) {
-    ["pathName":"SplFileInfo":private] => string(28) "root/files/01/test01-01.php",
-    ["fileName":"SplFileInfo":private] => string(13) "test01-01.php"
-  ],
-  1 => object(SplFileInfo)#6 (2) [
-    ["pathName":"SplFileInfo":private] => string(28) "root/files/01/test01-02.php",
-    ["fileName":"SplFileInfo":private] => string(13) "test01-02.php"
-  ]
-]
+$results[0]->getPathname(); // root/files/01/test01-01.php; 
+$results[1]->getPathname(); // root/files/01/test01-02.php;
 ```
 
 ## Tests

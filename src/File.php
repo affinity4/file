@@ -46,6 +46,14 @@ class File
     
     /**
      * @author Luke Watts <luke@affinity4.ie>
+     * @since 2.0.0
+     *
+     * @var
+     */
+    private $dir;
+    
+    /**
+     * @author Luke Watts <luke@affinity4.ie>
      * @since  1.0.0
      *
      * @var array
@@ -82,111 +90,77 @@ class File
     }
     
     /**
-     * Sets the limit to -1 so searches will return
-     * a complete array of all results
+     * Sets the directory to start search in.
      *
      * @author Luke Watts <luke@affinity4.ie>
-     * @since  1.0.0
-     *
-     * @return $this
-     */
-    public function all()
-    {
-        $this->limit = -1;
-        
-        return $this;
-    }
-    
-    /**
-     * Return the first item as a single SplFileInfo object.
-     *
-     * @author Luke Watts <luke@affinity4.ie>
-     * @since  1.0.0
-     *
-     * @return $this
-     */
-    public function one()
-    {
-        $this->limit = 1;
-        
-        return $this;
-    }
-    
-    /**
-     * Set the limit returned to a certain amount
-     *
-     * Setting to 1 will return a single object instead
-     * of an array of objects.
-     *
-     * Setting to -1 returns an array of all results
-     *
-     * @author Luke Watts <luke@affinity4.ie>
-     * @since  1.0.0
-     *
-     * @param $num
-     *
-     * @return $this
-     */
-    public function amount($num)
-    {
-        $this->limit = $num;
-        
-        return $this;
-    }
-    
-    /**
-     * Search the parent directory of specified directory.
-     *
-     * @author Luke Watts <luke@affinity4.ie>
-     * @since  1.0.0
+     * @since  2.0.0
      *
      * @param $dir
      *
+     * @return File
+     */
+    public function in($dir)
+    {
+        $this->dir = $dir;
+    
+        $this->make();
+        
+        return $this;
+    }
+    
+    /**
+     * Search the parent directory.
+     *
      * @return array|bool|mixed
      */
-    public function inParentOf($dir)
+    public function upOne()
     {
-        $dir = dirname($dir);
-        $this->iterator = new \DirectoryIterator($dir);
-        
-        // Check if first character is one of the self::$regex_delimiters
-        foreach ($this->regex_delimiters as $delimiter) {
-            $pos = (strpos($this->pattern, $delimiter) === 0) ? $delimiter : false;
-            if ($pos !== false) break;
-        }
-        
-        // If first character is one of the $common_regex_delimiters
-        if ($pos !== false) {
-            // Then chek if the last character is the same
-            $index = strlen($this->pattern) - 1;
+        $dir     = $this->getDir();
+        $pattern = $this->getPattern();
+        $limit   = $this->getLimit();
     
-            $pos_last = (strrpos($this->pattern, $pos, $index) === $index) ? $pos : false;
-    
-            $first_last_match = ($pos_last !== false) ? true : false;
-        }
-    
-        if (isset($first_last_match) && $first_last_match !== false) {
-            // If first and last are the same treat expression as a regex
-            foreach ($this->iterator as $item) {
-                $filename = $item->getFilename();
-            
-                if ($item->isDot()) continue;
-                if ($item->isDir()) continue;
-            
-                if (preg_match($this->pattern, $filename) === 1) $this->file_list[] = new \SplFileInfo($item->getPathname());
-            }
+        if ($this->find($pattern)->in($dir)->has() === false) {
+            $dir = dirname($dir);
+            $this->file_list = $this->find($pattern)->in($dir)->get($limit);
         } else {
-            // Else use $file as is
-            foreach ($this->iterator as $item) {
-                $filename = $item->getFilename();
-            
-                if ($item->isDot()) continue;
-                if ($item->isDir()) continue;
-            
-                if (preg_match('/^' . preg_quote($this->pattern) . '$/', $filename) === 1) $this->file_list[] = new \SplFileInfo($item->getPathname());
-            }
+            $this->file_list = $this->find($pattern)->in($dir)->get($limit);
         }
+        
+        return $this;
+    }
     
+    /**
+     * @return File
+     */
+    public function up()
+    {
+        $dir = $this->getDir();
+        $pattern = $this->getPattern();
+        $limit   = $this->getLimit();
+    
+        if ($this->find($pattern)->in($dir)->has() === false) {
+            $dir = dirname($dir);
+            
+            $this->file_list = $this->find($pattern)->in($dir)->up()->get($limit);
+        } else {
+            $this->file_list = $this->find($pattern)->in($dir)->get($limit);
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * Return specified amount of files
+     *
+     * @param int $limit
+     *
+     * @return array|bool|mixed
+     */
+    public function get($limit = -1)
+    {
+        if ($limit === 0 || $limit < -1) throw new \InvalidArgumentException(sprintf("An integer of %s cannot be passed as a limit to the `get` method. Only -1, 1 or more can be given.", $limit));
+        $this->limit = $limit;
+        
         if (isset($this->getFileList()[0])) {
             if ($this->limit === -1) {
                 return $this->getFileList();
@@ -201,25 +175,61 @@ class File
     }
     
     /**
-     * Recursively search the parent directories of specified directory.
+     * Checks existence of file.
      *
-     * @author Luke Watts <luke@affinity4.ie>
-     * @since  1.0.0
-     *
-     * @param $dir
-     *
-     * @return array|bool|mixed
+     * @return bool
      */
-    public function inParentsOf($dir)
+    public function has()
     {
-        $pattern = $this->getPattern();
-        $limit = $this->getLimit();
-        if ($this->find($pattern)->amount($limit)->inParentOf($dir) === false) {
-            $dir = dirname($dir);
+         return isset($this->getFileList()[0]);
+    }
+    
+    public function make()
+    {
+        $this->iterator = new \DirectoryIterator($this->getDir());
+    
+        // Check if first character is one of the self::$regex_delimiters
+        foreach ($this->regex_delimiters as $delimiter) {
+            $pos = (strpos($this->pattern, $delimiter) === 0) ? $delimiter : false;
+            if ($pos !== false) break;
+        }
+    
+        // If first character is one of the $common_regex_delimiters
+        if ($pos !== false) {
+            // Then check if the last character is the same
+            $index = strlen($this->pattern) - 1;
+        
+            $pos_last = (strrpos($this->pattern, $pos, $index) === $index) ? $pos : false;
+        
+            $first_last_match = ($pos_last !== false) ? true : false;
+        }
+    
+        if (isset($first_last_match) && $first_last_match !== false) {
+            // Reset the array to avoid duplicate entry issue in version 1.0.0 in recursive methods
+            $this->file_list = [];
             
-            return $this->find($pattern)->amount($limit)->inParentsOf($dir);
+            // If first and last are the same treat expression as a regex
+            foreach ($this->iterator as $item) {
+                $filename = $item->getFilename();
+            
+                if ($item->isDot()) continue;
+                if ($item->isDir()) continue;
+            
+                if (preg_match($this->pattern, $filename) === 1) $this->file_list[] = new \SplFileInfo($item->getPathname());
+            }
         } else {
-            return $this->find($pattern)->amount($limit)->inParentOf($dir);
+            // Reset the array to avoid duplicate entry issue in version 1.0.0 in recursive methods
+            $this->file_list = [];
+            
+            // Else use plain file name
+            foreach ($this->iterator as $item) {
+                $filename = $item->getFilename();
+            
+                if ($item->isDot()) continue;
+                if ($item->isDir()) continue;
+            
+                if (preg_match('/^' . preg_quote($this->pattern) . '$/', $filename) === 1) $this->file_list[] = new \SplFileInfo($item->getPathname());
+            }
         }
     }
     
@@ -239,6 +249,9 @@ class File
     /**
      * Returns the current limit
      *
+     * @author Luke Watts <luke@affinity4.ie>
+     * @since  1.0.0
+     *
      * @return mixed
      */
     public function getLimit()
@@ -247,7 +260,23 @@ class File
     }
     
     /**
+     * Get the current directory.
+     *
+     * @author Luke Watts <luke@affinity4.ie>
+     * @since  2.0.0
+     *
+     * @return mixed
+     */
+    public function getDir()
+    {
+        return $this->dir;
+    }
+    
+    /**
      * Returns file list array
+     *
+     * @author Luke Watts <luke@affinity4.ie>
+     * @since  1.0.0
      *
      * @return array
      */
