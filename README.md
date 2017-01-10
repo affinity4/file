@@ -19,7 +19,7 @@ or
 ```
 {
     "require": {
-        "affinity4/file": "^2.0"
+        "affinity4/file": "^2.1"
     }
 }
 ```
