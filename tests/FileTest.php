@@ -181,6 +181,12 @@ class FileTest extends TestCase
         $this->assertCount(3, $this->file->find($pattern)->in($dir)->up()->get());
     }
     
+    /**
+     * @author Luke Watts <luke@affinity4.ie>
+     * @since  2.0.0
+     *
+     * @depends testGet
+     */
     public function testParent()
     {
         $pattern = '/^test[\w\d-]*.txt$/';
@@ -192,6 +198,12 @@ class FileTest extends TestCase
         $this->assertCount(3, $this->file->find($pattern)->in($dir)->parent()->get());
     }
     
+    /**
+     * @author Luke Watts <luke@affinity4.ie>
+     * @since  2.0.0
+     *
+     * @depends testGet
+     */
     public function testParents()
     {
         $pattern = '/^test01-[\w\d]{2}.txt$/';
@@ -201,5 +213,27 @@ class FileTest extends TestCase
         $this->assertInstanceOf('Affinity4\File\File', $this->file->find($pattern)->in($dir)->parents());
         $this->assertContainsOnlyInstancesOf('SplFileInfo', $this->file->find($pattern)->in($dir)->parents()->get());
         $this->assertCount(3, $this->file->find($pattern)->in($dir)->parents()->get());
+    }
+
+    /**
+     * @author Luke Watts <luke@affinity4.ie>
+     * @since  2.0.1
+     *
+     * @depends testGet
+     */
+    public function testInGet()
+    {
+        $pattern = '/^test02-[\w\d]{2}.txt$/';
+        $dir     = 'tests/files/01/02';
+        $result  = $this->file->find($pattern)->in($dir)->get();
+        $sep     = DIRECTORY_SEPARATOR;
+        $file    = ($sep === '\\') ? str_replace('/', '\\', $result[0]->getPathName()) : $result[0]->getPathName();
+
+        
+        $this->assertInternalType('array', $this->file->find($pattern)->in($dir)->get());
+        $this->assertInstanceOf('Affinity4\File\File', $this->file->find($pattern)->in($dir));
+        $this->assertContainsOnlyInstancesOf('SplFileInfo', $this->file->find($pattern)->in($dir)->get());
+        $this->assertCount(3, $this->file->find($pattern)->in($dir)->get());
+        $this->assertEquals('tests\\files\\01\\02\\test02-01.txt', $file);
     }
 }

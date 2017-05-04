@@ -100,11 +100,6 @@ $results[0]->getPathname(); // root/files/00/01/test01-01.php;
 $results[1]->getPathname(); // root/files/00/01/test01-02.php;
 ```
 
-If you only want to search in the directory 
-```
-
-```
-
 ## Tests
 
 Run tests:
