@@ -217,7 +217,7 @@ class FileTest extends TestCase
 
     /**
      * @author Luke Watts <luke@affinity4.ie>
-     * @since  2.0.1
+     * @since  2.1.1
      *
      * @depends testGet
      */
