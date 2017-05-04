@@ -1,6 +1,6 @@
 # File
 
-[![Build Status](https://travis-ci.org/affinity4/File.svg?branch=master)](https://travis-ci.org/affinity4/File)
+[![Build Status](https://travis-ci.org/affinity4/file.svg?branch=master)](https://travis-ci.org/affinity4/file)
 
 Find files using a regex pattern or exact filename.
 
