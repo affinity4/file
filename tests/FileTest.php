@@ -225,15 +225,10 @@ class FileTest extends TestCase
     {
         $pattern = '/^test02-[\w\d]{2}.txt$/';
         $dir     = 'tests/files/01/02';
-        $result  = $this->file->find($pattern)->in($dir)->get();
-        $sep     = DIRECTORY_SEPARATOR;
-        $file    = ($sep === '\\') ? str_replace('/', '\\', $result[0]->getPathName()) : $result[0]->getPathName();
-
         
         $this->assertInternalType('array', $this->file->find($pattern)->in($dir)->get());
         $this->assertInstanceOf('Affinity4\File\File', $this->file->find($pattern)->in($dir));
         $this->assertContainsOnlyInstancesOf('SplFileInfo', $this->file->find($pattern)->in($dir)->get());
         $this->assertCount(3, $this->file->find($pattern)->in($dir)->get());
-        $this->assertEquals('tests\\files\\01\\02\\test02-01.txt', $file);
     }
 }
