@@ -266,19 +266,16 @@ class File
         // Check if first character is one of the self::$regex_delimiters
         foreach ($this->regex_delimiters as $delimiter) {
             $pos = (strpos($pattern, $delimiter) === 0) ? $delimiter : false;
+
+            // If first character is one of the $common_regex_delimiters
             if ($pos !== false) {
-                break;
+                // Then check if the last character is the same
+                $index = strlen($pattern) - 1;
+
+                $pos_last = (strrpos($pattern, $pos, $index) === $index) ? $pos : false;
+
+                return ($pos_last !== false) ? true : false;
             }
-        }
-
-        // If first character is one of the $common_regex_delimiters
-        if ($pos !== false) {
-            // Then check if the last character is the same
-            $index = strlen($pattern) - 1;
-
-            $pos_last = (strrpos($pattern, $pos, $index) === $index) ? $pos : false;
-
-            return ($pos_last !== false) ? true : false;
         }
 
         return false;
