@@ -4,7 +4,7 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/affinity4/file/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/affinity4/file/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/affinity4/file/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/affinity4/file/?branch=master)
 
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/25819a9c-87e4-489d-9034-78b42e6d0e86/big.png)](https://insight.sensiolabs.com/projects/25819a9c-87e4-489d-9034-78b42e6d0e86)
+https://insight.sensiolabs.com/projects/25819a9c-87e4-489d-9034-78b42e6d0e86/big.png
 
 Find files using a regex pattern or exact filename.
 
