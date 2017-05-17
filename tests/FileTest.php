@@ -93,6 +93,32 @@ class FileTest extends TestCase
     }
 
     /**
+     * @author  Luke Watts <luke@affinity4.ie>
+     *
+     * @since   2.1.3
+     *
+     * @depends testFind
+     */
+    public function testIsValidPattern()
+    {
+        $invalid_pattern = ['^test[\w\d-]*.txt$/', '/^test[\w\d-]*.txt$', '^test[\w\d-]*.txt$'];
+
+        $this->assertEquals($invalid_pattern[0], $this->file->find($invalid_pattern[0])->getPattern());
+        $this->assertFalse($this->file->isValidPattern($invalid_pattern[0]));
+
+        $this->assertEquals($invalid_pattern[1], $this->file->find($invalid_pattern[1])->getPattern());
+        $this->assertFalse($this->file->isValidPattern($invalid_pattern[1]));
+
+        $this->assertEquals($invalid_pattern[2], $this->file->find($invalid_pattern[2])->getPattern());
+        $this->assertFalse($this->file->isValidPattern($invalid_pattern[2]));
+
+        $valid_pattern = '/^test[\w\d-]*.txt$/';
+
+        $this->assertEquals($valid_pattern, $this->file->find($valid_pattern)->getPattern());
+        $this->assertTrue($this->file->isValidPattern($valid_pattern));
+    }
+
+    /**
      * @author Luke Watts <luke@affinity4.ie>
      *
      * @since  2.0.0

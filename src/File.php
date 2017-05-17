@@ -253,17 +253,19 @@ class File
     }
 
     /**
-     * Make
+     * @param $pattern
      *
      * @author Luke Watts <luke@affinity4.ie>
+     *
+     * @since 2.1.3
+     *
+     * @return bool
      */
-    public function make()
+    public function isValidPattern($pattern)
     {
-        $this->iterator = new \DirectoryIterator($this->getDir());
-
         // Check if first character is one of the self::$regex_delimiters
         foreach ($this->regex_delimiters as $delimiter) {
-            $pos = (strpos($this->pattern, $delimiter) === 0) ? $delimiter : false;
+            $pos = (strpos($pattern, $delimiter) === 0) ? $delimiter : false;
             if ($pos !== false) {
                 break;
             }
@@ -272,14 +274,26 @@ class File
         // If first character is one of the $common_regex_delimiters
         if ($pos !== false) {
             // Then check if the last character is the same
-            $index = strlen($this->pattern) - 1;
+            $index = strlen($pattern) - 1;
 
-            $pos_last = (strrpos($this->pattern, $pos, $index) === $index) ? $pos : false;
+            $pos_last = (strrpos($pattern, $pos, $index) === $index) ? $pos : false;
 
-            $first_last_match = ($pos_last !== false) ? true : false;
+            return ($pos_last !== false) ? true : false;
         }
 
-        if (isset($first_last_match) && $first_last_match !== false) {
+        return false;
+    }
+
+    /**
+     * Make the search
+     *
+     * @author Luke Watts <luke@affinity4.ie>
+     */
+    public function make()
+    {
+        $this->iterator = new \DirectoryIterator($this->getDir());
+
+        if ($this->isValidPattern($this->pattern)) {
             // Reset the array to avoid duplicate entry issue in version 1.0.0 in recursive methods
             $this->file_list = [];
 
