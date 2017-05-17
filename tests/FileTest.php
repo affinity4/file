@@ -17,6 +17,7 @@ use Affinity4\File\File;
  * FileTest Class
  *
  * @author Luke Watts <luke@affinity4.ie>
+ *
  * @since  1.0.0
  *
  * @package Affinity4\File\Test
@@ -25,14 +26,16 @@ class FileTest extends TestCase
 {
     /**
      * @author Luke Watts <luke@affinity4.ie>
+     *
      * @since  1.0.0
      *
      * @var
      */
     private $file;
-    
+
     /**
      * @author Luke Watts <luke@affinity4.ie>
+     *
      * @since  1.0.0
      *
      * @depends testFilesExist
@@ -41,9 +44,10 @@ class FileTest extends TestCase
     {
         $this->file = new File();
     }
-    
+
     /**
      * @author Luke Watts <luke@affinity4.ie>
+     *
      * @since  1.0.0
      */
     public function testDirsExist()
@@ -53,9 +57,10 @@ class FileTest extends TestCase
         $this->assertDirectoryExists('tests/files/01', $root);
         $this->assertDirectoryExists('tests/files/01/02', $root);
     }
-    
+
     /**
      * @author Luke Watts <luke@affinity4.ie>
+     *
      * @since  1.0.0
      *
      * @depends testDirsExist
@@ -71,9 +76,10 @@ class FileTest extends TestCase
         $this->assertFileExists('tests/files/01/02/test02-02.txt', $root);
         $this->assertFileExists('tests/files/01/02/test02-03.txt', $root);
     }
-    
+
     /**
      * @author Luke Watts <luke@affinity4.ie>
+     *
      * @since  1.0.0
      *
      * @depends testFilesExist
@@ -81,13 +87,14 @@ class FileTest extends TestCase
     public function testFind()
     {
         $pattern = '/^test[\w\d-]*.txt$/';
-        
+
         $this->assertEquals($pattern, $this->file->find($pattern)->getPattern());
         $this->assertInstanceOf('Affinity4\File\File', $this->file->find($pattern));
     }
-    
+
     /**
      * @author Luke Watts <luke@affinity4.ie>
+     *
      * @since  2.0.0
      *
      * @depends testFind
@@ -95,14 +102,15 @@ class FileTest extends TestCase
     public function testIn()
     {
         $pattern = '/^test[\w\d-]*.txt$/';
-        $dir     = 'tests/files/01/02';
-        
+        $dir = 'tests/files/01/02';
+
         $this->assertEquals($dir, $this->file->find($pattern)->in($dir)->getDir());
         $this->assertInstanceOf('Affinity4\File\File', $this->file->find($pattern)->in($dir));
     }
-    
+
     /**
      * @author Luke Watts <luke@affinity4.ie>
+     *
      * @since  2.0.0
      *
      * @depends testIn
@@ -110,46 +118,47 @@ class FileTest extends TestCase
     public function testGet()
     {
         $pattern = '/^test[\w\d-]*.txt$/';
-        $dir     = 'tests/files/01/02';
-        
+        $dir = 'tests/files/01/02';
+
         $this->assertInternalType('array', $this->file->find($pattern)->in($dir)->get());
         $this->assertContainsOnlyInstancesOf('SplFileInfo', $this->file->find($pattern)->in($dir)->get());
-        
+
         // Test amounts returned when specified limits are given
         $this->assertCount(3, $this->file->find($pattern)->in($dir)->get());
         $this->assertCount(3, $this->file->find($pattern)->in($dir)->get(3));
         $this->assertCount(2, $this->file->find($pattern)->in($dir)->get(2));
-        
+
         // Because 1 returns an object test for that instead
         $this->assertInstanceOf('SplFileInfo', $this->file->find($pattern)->in($dir)->get(1));
     }
-    
+
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      * @expectedExceptionMessageRegExp  /^An integer of -?[\d]+ cannot be passed as a limit to the `get` method. Only -1, 1 or more can be given.$/
      */
     public function testThrowsInvalidArgumentExceptionOnLessThanMinusOne()
     {
         $pattern = '/^test[\w\d-]*.txt$/';
-        $dir     = 'tests/files/01/02';
-        
+        $dir = 'tests/files/01/02';
+
         $this->file->find($pattern)->in($dir)->get(-2);
     }
-    
+
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      * @expectedExceptionMessageRegExp  /^An integer of -?[\d]+ cannot be passed as a limit to the `get` method. Only -1, 1 or more can be given.$/
      */
     public function testThrowsInvalidArgumentExceptionOnZero()
     {
         $pattern = '/^test[\w\d-]*.txt$/';
-        $dir     = 'tests/files/01/02';
-        
+        $dir = 'tests/files/01/02';
+
         $this->file->find($pattern)->in($dir)->get(0);
     }
-    
+
     /**
      * @author Luke Watts <luke@affinity4.ie>
+     *
      * @since  2.0.0
      *
      * @depends testGet
@@ -157,14 +166,15 @@ class FileTest extends TestCase
     public function testUpOne()
     {
         $pattern = '/^test[\w\d-]*.txt$/';
-        $dir     = 'tests/files/01/02';
-        
+        $dir = 'tests/files/01/02';
+
         $this->assertContainsOnlyInstancesOf('SplFileInfo', $this->file->find($pattern)->in($dir)->upOne()->get());
         $this->assertCount(3, $this->file->find($pattern)->in($dir)->upOne()->get());
     }
-    
+
     /**
      * @author Luke Watts <luke@affinity4.ie>
+     *
      * @since  2.0.0
      *
      * @depends testGet
@@ -173,16 +183,17 @@ class FileTest extends TestCase
     public function testUp()
     {
         $pattern = '/^test[\w\d-]*.txt$/';
-        $dir     = 'tests/files/01/02';
-        
+        $dir = 'tests/files/01/02';
+
         $this->assertInternalType('array', $this->file->find($pattern)->in($dir)->up()->get());
         $this->assertInstanceOf('Affinity4\File\File', $this->file->find($pattern)->in($dir)->up());
         $this->assertContainsOnlyInstancesOf('SplFileInfo', $this->file->find($pattern)->in($dir)->up()->get());
         $this->assertCount(3, $this->file->find($pattern)->in($dir)->up()->get());
     }
-    
+
     /**
      * @author Luke Watts <luke@affinity4.ie>
+     *
      * @since  2.0.0
      *
      * @depends testGet
@@ -190,16 +201,17 @@ class FileTest extends TestCase
     public function testParent()
     {
         $pattern = '/^test[\w\d-]*.txt$/';
-        $dir     = 'tests/files/01/02';
-    
+        $dir = 'tests/files/01/02';
+
         $this->assertInternalType('array', $this->file->find($pattern)->in($dir)->parent()->get());
         $this->assertInstanceOf('Affinity4\File\File', $this->file->find($pattern)->in($dir)->parent());
         $this->assertContainsOnlyInstancesOf('SplFileInfo', $this->file->find($pattern)->in($dir)->parent()->get());
         $this->assertCount(3, $this->file->find($pattern)->in($dir)->parent()->get());
     }
-    
+
     /**
      * @author Luke Watts <luke@affinity4.ie>
+     *
      * @since  2.0.0
      *
      * @depends testGet
@@ -207,8 +219,8 @@ class FileTest extends TestCase
     public function testParents()
     {
         $pattern = '/^test01-[\w\d]{2}.txt$/';
-        $dir     = 'tests/files/01/02';
-        
+        $dir = 'tests/files/01/02';
+
         $this->assertInternalType('array', $this->file->find($pattern)->in($dir)->parents()->get());
         $this->assertInstanceOf('Affinity4\File\File', $this->file->find($pattern)->in($dir)->parents());
         $this->assertContainsOnlyInstancesOf('SplFileInfo', $this->file->find($pattern)->in($dir)->parents()->get());
@@ -217,6 +229,7 @@ class FileTest extends TestCase
 
     /**
      * @author Luke Watts <luke@affinity4.ie>
+     *
      * @since  2.1.1
      *
      * @depends testGet
@@ -224,8 +237,8 @@ class FileTest extends TestCase
     public function testInGet()
     {
         $pattern = '/^test02-[\w\d]{2}.txt$/';
-        $dir     = 'tests/files/01/02';
-        
+        $dir = 'tests/files/01/02';
+
         $this->assertInternalType('array', $this->file->find($pattern)->in($dir)->get());
         $this->assertInstanceOf('Affinity4\File\File', $this->file->find($pattern)->in($dir));
         $this->assertContainsOnlyInstancesOf('SplFileInfo', $this->file->find($pattern)->in($dir)->get());

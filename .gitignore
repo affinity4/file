@@ -1,6 +1,4 @@
-.idea/
 vendor/
-.DS_Store
-Thumbs.db
+.pphp_cs.cache
 composer.phar
 composer.lock
