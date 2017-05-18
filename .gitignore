@@ -1,4 +1,5 @@
 vendor/
-.pphp_cs.cache
+tests/coverage/
+.php_cs.cache
 composer.phar
 composer.lock
