@@ -108,17 +108,7 @@ class File
      */
     public function parent()
     {
-        $pattern = $this->getPattern();
-        $dir = $this->getDir();
-
-        if ($this->find($pattern)->in($dir)->has() === false) {
-            $dir = dirname($dir);
-            $this->file_list = $this->find($pattern)->in($dir)->get();
-        } else {
-            $this->file_list = $this->find($pattern)->in($dir)->get();
-        }
-
-        return $this;
+        return $this->upOne();
     }
 
     /**
@@ -132,18 +122,7 @@ class File
      */
     public function parents()
     {
-        $dir = $this->getDir();
-        $pattern = $this->getPattern();
-
-        if ($this->find($pattern)->in($dir)->has() === false) {
-            $dir = dirname($dir);
-
-            $this->file_list = $this->find($pattern)->in($dir)->up()->get();
-        } else {
-            $this->file_list = $this->find($pattern)->in($dir)->get();
-        }
-
-        return $this;
+        return $this->up();
     }
 
     /**
