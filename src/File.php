@@ -324,20 +324,6 @@ class File
     }
 
     /**
-     * Returns the current limit
-     *
-     * @author Luke Watts <luke@affinity4.ie>
-     *
-     * @since  1.0.0
-     *
-     * @return int
-     */
-    public function getLimit()
-    {
-        return $this->limit;
-    }
-
-    /**
      * Get the current directory.
      *
      * @author Luke Watts <luke@affinity4.ie>

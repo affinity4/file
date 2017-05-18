@@ -87,9 +87,14 @@ class FileTest extends TestCase
     public function testFind()
     {
         $pattern = '/^test[\w\d-]*.txt$/';
+        $filename = 'test02-01.txt';
+
 
         $this->assertEquals($pattern, $this->file->find($pattern)->getPattern());
         $this->assertInstanceOf('Affinity4\File\File', $this->file->find($pattern));
+
+        $this->assertEquals($filename, $this->file->find($filename)->getPattern());
+        $this->assertInstanceOf('Affinity4\File\File', $this->file->find($filename));
     }
 
     /**
@@ -191,11 +196,14 @@ class FileTest extends TestCase
      */
     public function testUpOne()
     {
-        $pattern = '/^test[\w\d-]*.txt$/';
+        $existing_pattern = '/^test[\w\d-]*.txt$/';
+        $non_matching_pattern = '/^test[\w\d-]*.php$/';
         $dir = 'tests/files/01/02';
 
-        $this->assertContainsOnlyInstancesOf('SplFileInfo', $this->file->find($pattern)->in($dir)->upOne()->get());
-        $this->assertCount(3, $this->file->find($pattern)->in($dir)->upOne()->get());
+        $this->assertContainsOnlyInstancesOf('SplFileInfo', $this->file->find($existing_pattern)->in($dir)->upOne()->get());
+        $this->assertCount(3, $this->file->find($existing_pattern)->in($dir)->upOne()->get());
+
+        $this->assertEmpty($this->file->find($non_matching_pattern)->in($dir)->upOne()->get());
     }
 
     /**
