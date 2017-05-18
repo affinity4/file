@@ -253,11 +253,13 @@ class File
     }
 
     /**
-     * @param $pattern
+     * Check is the Regex a valid pattern
      *
      * @author Luke Watts <luke@affinity4.ie>
      *
-     * @since 2.1.3
+     * @since  2.1.3
+     *
+     * @param $pattern
      *
      * @return bool
      */
@@ -282,6 +284,37 @@ class File
     }
 
     /**
+     * Set the file list using by matching pattern
+     *
+     * @author Luke Watts <luke@affinity4.ie>
+     *
+     * @since  2.1.4
+     *
+     * @param \DirectoryIterator $iterator
+     * @param                    $pattern
+     */
+    public function setFileListUsingPattern(\DirectoryIterator $iterator, $pattern)
+    {
+        $this->iterator = $iterator;
+
+        // Reset the array to avoid duplicate entry issue in version 1.0.0 in recursive methods
+        $this->file_list = [];
+
+        // If first and last are the same treat expression as a regex
+        foreach ($this->iterator as $item) {
+            if ($item->isDot() || $item->isDir()) {
+                continue;
+            }
+
+            if (preg_match($pattern, $item->getFilename()) === 1) {
+                $this->file_list[] = new \SplFileInfo($item->getPathname());
+            }
+        }
+
+
+    }
+
+    /**
      * Make the search
      *
      * @author Luke Watts <luke@affinity4.ie>
@@ -291,43 +324,11 @@ class File
         $this->iterator = new \DirectoryIterator($this->getDir());
 
         if ($this->isValidPattern($this->pattern)) {
-            // Reset the array to avoid duplicate entry issue in version 1.0.0 in recursive methods
-            $this->file_list = [];
-
             // If first and last are the same treat expression as a regex
-            foreach ($this->iterator as $item) {
-                $filename = $item->getFilename();
-
-                if ($item->isDot()) {
-                    continue;
-                }
-                if ($item->isDir()) {
-                    continue;
-                }
-
-                if (preg_match($this->pattern, $filename) === 1) {
-                    $this->file_list[] = new \SplFileInfo($item->getPathname());
-                }
-            }
+            $this->setFileListUsingPattern(new \DirectoryIterator($this->getDir()), $this->pattern);
         } else {
-            // Reset the array to avoid duplicate entry issue in version 1.0.0 in recursive methods
-            $this->file_list = [];
-
             // Else use plain file name
-            foreach ($this->iterator as $item) {
-                $filename = $item->getFilename();
-
-                if ($item->isDot()) {
-                    continue;
-                }
-                if ($item->isDir()) {
-                    continue;
-                }
-
-                if (preg_match('/^' . preg_quote($this->pattern) . '$/', $filename) === 1) {
-                    $this->file_list[] = new \SplFileInfo($item->getPathname());
-                }
-            }
+            $this->setFileListUsingPattern(new \DirectoryIterator($this->getDir()), '/^' . $this->pattern . '$/');
         }
     }
 

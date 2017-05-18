@@ -270,4 +270,70 @@ class FileTest extends TestCase
         $this->assertContainsOnlyInstancesOf('SplFileInfo', $this->file->find($pattern)->in($dir)->get());
         $this->assertCount(3, $this->file->find($pattern)->in($dir)->get());
     }
+
+    /**
+     * @author Luke Watts <luke@affinity4.ie>
+     *
+     * @since  2.1.4
+     *
+     * @depends testGet
+     */
+    public function testSetFileListUsingPatternWithRegex()
+    {
+        $dir = 'tests/files/01/02';
+        $regex_pattern = '/^test02-[\w\d]{2}.txt$/';
+
+        $this->file->find($regex_pattern)->in($dir)->get();
+        $this->file->setFileListUsingPattern(
+            new \DirectoryIterator($this->file->getDir()),
+            $regex_pattern
+        );
+
+        $this->assertContainsOnlyInstancesOf('SplFileInfo', $this->file->getFileList());
+        $this->assertCount(3, $this->file->getFileList());
+
+        $this->assertEquals(
+            'tests/files/01/02/test02-01.txt',
+            str_replace(DIRECTORY_SEPARATOR, '/', $this->file->getFileList()[0]->getPathName())
+        );
+
+        $this->assertEquals(
+            'tests/files/01/02/test02-02.txt',
+            str_replace(DIRECTORY_SEPARATOR, '/', $this->file->getFileList()[1]->getPathName())
+        );
+
+        $this->assertEquals(
+            'tests/files/01/02/test02-03.txt',
+            str_replace(DIRECTORY_SEPARATOR, '/', $this->file->getFileList()[2]->getPathName())
+        );
+    }
+
+    /**
+     * @author Luke Watts <luke@affinity4.ie>
+     *
+     * @since  2.1.4
+     *
+     * @depends testGet
+     */
+    public function testSetFileListUsingPatternWithFilename()
+    {
+        $dir = 'tests/files/01/02';
+        $regex_pattern = '/^test02-[\w\d]{2}.txt$/';
+        $filename = 'test02-01.txt';
+
+        $this->file->find($regex_pattern)->in($dir)->get();
+
+        $this->file->setFileListUsingPattern(
+            new \DirectoryIterator($this->file->getDir()),
+            '/^' . preg_quote($filename) . '$/'
+        );
+
+        $this->assertCount(1, $this->file->getFileList());
+        $this->assertInstanceOf('SplFileInfo', $this->file->getFileList()[0]);
+
+        $this->assertEquals(
+            'tests/files/01/02/test02-01.txt',
+            str_replace(DIRECTORY_SEPARATOR, '/', $this->file->getFileList()[0]->getPathName())
+        );
+    }
 }
