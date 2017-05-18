@@ -353,7 +353,7 @@ class File
      *
      * @since  1.0.0
      *
-     * @return mixed
+     * @return integer
      */
     public function getLimit()
     {
