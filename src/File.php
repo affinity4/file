@@ -310,8 +310,6 @@ class File
                 $this->file_list[] = new \SplFileInfo($item->getPathname());
             }
         }
-
-
     }
 
     /**
@@ -353,7 +351,7 @@ class File
      *
      * @since  1.0.0
      *
-     * @return integer
+     * @return int
      */
     public function getLimit()
     {
