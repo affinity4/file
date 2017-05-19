@@ -300,20 +300,19 @@ class FileTest extends TestCase
         $this->assertContainsOnlyInstancesOf('SplFileInfo', $this->file->getFileList());
         $this->assertCount(3, $this->file->getFileList());
 
-        $this->assertEquals(
-            'tests/files/01/02/test02-01.txt',
-            str_replace(DIRECTORY_SEPARATOR, '/', $this->file->getFileList()[0]->getPathName())
-        );
-
-        $this->assertEquals(
-            'tests/files/01/02/test02-02.txt',
-            str_replace(DIRECTORY_SEPARATOR, '/', $this->file->getFileList()[1]->getPathName())
-        );
-
-        $this->assertEquals(
-            'tests/files/01/02/test02-03.txt',
+        $pathnames = [
+            str_replace(DIRECTORY_SEPARATOR, '/', $this->file->getFileList()[0]->getPathName()),
+            str_replace(DIRECTORY_SEPARATOR, '/', $this->file->getFileList()[1]->getPathName()),
             str_replace(DIRECTORY_SEPARATOR, '/', $this->file->getFileList()[2]->getPathName())
-        );
+        ];
+
+        $expected = [
+            'tests/files/01/02/test02-01.txt',
+            'tests/files/01/02/test02-02.txt',
+            'tests/files/01/02/test02-03.txt',
+        ];
+
+        $this->assertArraySubset($expected, $pathnames);
     }
 
     /**
