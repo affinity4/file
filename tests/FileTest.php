@@ -312,6 +312,10 @@ class FileTest extends TestCase
             'tests/files/01/02/test02-03.txt',
         ];
 
+        // Fix weird bug in Ubuntu 14.04 where it shuffles the arrays somehow
+        sort($expected);
+        sort($pathnames);
+
         $this->assertArraySubset($expected, $pathnames);
     }
 
