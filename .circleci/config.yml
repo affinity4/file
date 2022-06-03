@@ -54,7 +54,7 @@ jobs:
 workflows:
   test_lts_php_versions:
     jobs:
-      - test:
+      - build:
         matrix: 
           parameters:
             php-version: [7.3.30, 7.4.26, 8.0.19, 8.1.5]
