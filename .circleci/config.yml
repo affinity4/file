@@ -52,7 +52,7 @@ jobs:
       - run: ./vendor/bin/phpunit
 
 workflows:
-  all-tests:
+  build:
     jobs:
       - test:
         matrix: 
