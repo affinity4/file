@@ -2,18 +2,24 @@
 # See: https://circleci.com/docs/2.0/language-php/
 version: 2.1
 
+workflows:
+  test_lts_php_versions:
+    jobs:
+      - build:
+        matrix:
+          parameters:
+            php-version: [7.3.30, 7.4.26, 8.0.19, 8.1.5]
+
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
+
 jobs:
   build:
-    parameters:
-      php-version:
-        type: string
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
     docker:
       # Specify the version you desire here
-      - image: cimg/php:<< parameters.php-version >>
+      - image: cimg/php:7.3.30
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -50,11 +56,3 @@ jobs:
 
       # run tests with phpunit or codecept
       - run: ./vendor/bin/phpunit
-
-workflows:
-  test_lts_php_versions:
-    jobs:
-      - build:
-        matrix: 
-          parameters:
-            php-version: [7.3.30, 7.4.26, 8.0.19, 8.1.5]
