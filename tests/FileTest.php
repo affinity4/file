@@ -40,7 +40,7 @@ class FileTest extends TestCase
      *
      * @depends testFilesExist
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->file = new File();
     }
@@ -151,7 +151,7 @@ class FileTest extends TestCase
         $pattern = '/^test[\w\d-]*.txt$/';
         $dir = 'tests/files/01/02';
 
-        $this->assertInternalType('array', $this->file->find($pattern)->in($dir)->get());
+        $this->assertIsArray($this->file->find($pattern)->in($dir)->get());
         $this->assertContainsOnlyInstancesOf('SplFileInfo', $this->file->find($pattern)->in($dir)->get());
 
         // Test amounts returned when specified limits are given
@@ -163,24 +163,20 @@ class FileTest extends TestCase
         $this->assertInstanceOf('SplFileInfo', $this->file->find($pattern)->in($dir)->get(1));
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessageRegExp  /^An integer of -?[\d]+ cannot be passed as a limit to the `get` method. Only -1, 1 or more can be given.$/
-     */
     public function testThrowsInvalidArgumentExceptionOnLessThanMinusOne()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessageMatches('/^An integer of -?[\d]+ cannot be passed as a limit to the `get` method. Only -1, 1 or more can be given.$/');
         $pattern = '/^test[\w\d-]*.txt$/';
         $dir = 'tests/files/01/02';
 
         $this->file->find($pattern)->in($dir)->get(-2);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessageRegExp  /^An integer of -?[\d]+ cannot be passed as a limit to the `get` method. Only -1, 1 or more can be given.$/
-     */
     public function testThrowsInvalidArgumentExceptionOnZero()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessageMatches('/^An integer of -?[\d]+ cannot be passed as a limit to the `get` method. Only -1, 1 or more can be given.$/');
         $pattern = '/^test[\w\d-]*.txt$/';
         $dir = 'tests/files/01/02';
 
@@ -219,7 +215,7 @@ class FileTest extends TestCase
         $pattern = '/^test[\w\d-]*.txt$/';
         $dir = 'tests/files/01/02';
 
-        $this->assertInternalType('array', $this->file->find($pattern)->in($dir)->up()->get());
+        $this->assertIsArray($this->file->find($pattern)->in($dir)->up()->get());
         $this->assertInstanceOf('Affinity4\File\File', $this->file->find($pattern)->in($dir)->up());
         $this->assertContainsOnlyInstancesOf('SplFileInfo', $this->file->find($pattern)->in($dir)->up()->get());
         $this->assertCount(3, $this->file->find($pattern)->in($dir)->up()->get());
@@ -237,7 +233,7 @@ class FileTest extends TestCase
         $pattern = '/^test[\w\d-]*.txt$/';
         $dir = 'tests/files/01/02';
 
-        $this->assertInternalType('array', $this->file->find($pattern)->in($dir)->parent()->get());
+        $this->assertIsArray($this->file->find($pattern)->in($dir)->parent()->get());
         $this->assertInstanceOf('Affinity4\File\File', $this->file->find($pattern)->in($dir)->parent());
         $this->assertContainsOnlyInstancesOf('SplFileInfo', $this->file->find($pattern)->in($dir)->parent()->get());
         $this->assertCount(3, $this->file->find($pattern)->in($dir)->parent()->get());
@@ -255,7 +251,7 @@ class FileTest extends TestCase
         $pattern = '/^test01-[\w\d]{2}.txt$/';
         $dir = 'tests/files/01/02';
 
-        $this->assertInternalType('array', $this->file->find($pattern)->in($dir)->parents()->get());
+        $this->assertIsArray($this->file->find($pattern)->in($dir)->parents()->get());
         $this->assertInstanceOf('Affinity4\File\File', $this->file->find($pattern)->in($dir)->parents());
         $this->assertContainsOnlyInstancesOf('SplFileInfo', $this->file->find($pattern)->in($dir)->parents()->get());
         $this->assertCount(3, $this->file->find($pattern)->in($dir)->parents()->get());
@@ -273,7 +269,7 @@ class FileTest extends TestCase
         $pattern = '/^test02-[\w\d]{2}.txt$/';
         $dir = 'tests/files/01/02';
 
-        $this->assertInternalType('array', $this->file->find($pattern)->in($dir)->get());
+        $this->assertIsArray($this->file->find($pattern)->in($dir)->get());
         $this->assertInstanceOf('Affinity4\File\File', $this->file->find($pattern)->in($dir));
         $this->assertContainsOnlyInstancesOf('SplFileInfo', $this->file->find($pattern)->in($dir)->get());
         $this->assertCount(3, $this->file->find($pattern)->in($dir)->get());
@@ -312,11 +308,7 @@ class FileTest extends TestCase
             'tests/files/01/02/test02-03.txt',
         ];
 
-        // Fix weird bug in Ubuntu 14.04 where it shuffles the arrays somehow
-        sort($expected);
-        sort($pathnames);
-
-        $this->assertArraySubset($expected, $pathnames);
+        $this->assertSame([], array_diff($expected, $pathnames));
     }
 
     /**
